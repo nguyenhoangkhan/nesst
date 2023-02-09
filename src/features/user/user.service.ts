@@ -13,6 +13,12 @@ export class UserService {
   async findOne(email: string) {
     const user = await this.userModel.findOne({ email });
 
+    return user;
+  }
+
+  async findByLogin(email: string) {
+    const user = await this.userModel.findOne({ email });
+
     if (!user) {
       throw new BadRequestException('Không tìm thấy người dùng');
     }

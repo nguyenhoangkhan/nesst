@@ -13,9 +13,7 @@ export class AuthService {
     private readonly userService: UserService,
   ) {}
 
-  async login(payload: LoginUserDto): Promise<any> {
-    const { email } = await this.findByLogin(payload);
-
+  async login(email: string): Promise<any> {
     const accessToken = this._createToken(email);
 
     return {
@@ -38,17 +36,34 @@ export class AuthService {
       ...payload,
       password: hashedPassword,
     });
-    return doc.save();
+
+    const accessToken = this._createToken(doc.email);
+
+    return {
+      accessToken,
+    };
   }
 
-  async validateUser(email: string): Promise<any> {
+  async validateUser({ email, password }): Promise<any> {
     const user = await this.userService.findOne(email);
 
     if (!user) {
-      throw new HttpException('Token không hợp lệ', HttpStatus.UNAUTHORIZED);
+      throw new BadRequestException('Tài khoản không tồn tại');
+    }
+
+    if (!isCorrectPassword(password, user.password)) {
+      throw new BadRequestException('Tài khoản hoặc mật khẩu không chính xác');
     }
 
     return user;
+
+    // const user = await this.userService.findOne(email);
+
+    // if (!user) {
+    //   throw new HttpException('Token không hợp lệ', HttpStatus.UNAUTHORIZED);
+    // }
+
+    // return user;
   }
 
   private _createToken(email: string) {

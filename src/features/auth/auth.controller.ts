@@ -1,14 +1,24 @@
-import { Controller } from '@nestjs/common';
+import { Controller, Request, UseGuards } from '@nestjs/common';
 import { Post, Body } from '@nestjs/common';
+
 import { HttpStatus } from '@nestjs/common/enums';
 import { responseBuilder } from 'src/share/builders/response.builder';
 import { ResponseMessage } from 'src/share/constants/message.const';
-import { LoginUserDto, RegisterUserDto } from '../user/dto/user.dto';
+import { RegisterUserDto } from '../user/dto/user.dto';
 import { AuthService } from './auth.service';
+import { LocalAuthGuard } from './guard/local-auth.guard';
 
-@Controller('')
+@Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
+
+  @UseGuards(LocalAuthGuard)
+  @Post('login')
+  async login(@Request() req) {
+    const user = req.user;
+
+    return this.authService.login(user.email);
+  }
 
   @Post('register')
   async register(@Body() payload: RegisterUserDto) {
@@ -23,10 +33,5 @@ export class AuthController {
     } catch (err) {
       return responseBuilder(null, HttpStatus.CREATED, err.message, '');
     }
-  }
-
-  @Post('login')
-  async login(@Body() payload: LoginUserDto) {
-    return await this.authService.login(payload);
   }
 }
