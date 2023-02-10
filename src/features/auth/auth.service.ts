@@ -56,14 +56,6 @@ export class AuthService {
     }
 
     return user;
-
-    // const user = await this.userService.findOne(email);
-
-    // if (!user) {
-    //   throw new HttpException('Token không hợp lệ', HttpStatus.UNAUTHORIZED);
-    // }
-
-    // return user;
   }
 
   private _createToken(email: string) {
