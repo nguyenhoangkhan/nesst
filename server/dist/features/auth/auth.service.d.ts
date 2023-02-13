@@ -9,8 +9,8 @@ export declare class AuthService {
     login(email: string): Promise<any>;
     register(payload: RegisterUserDto): Promise<{
         accessToken: {
-            expiresIn: any;
-            accessToken: any;
+            expiresIn: string;
+            accessToken: string;
         };
     }>;
     validateUser({ email, password }: {
@@ -21,8 +21,8 @@ export declare class AuthService {
     private findByLogin;
     loginWithFirebaseGoogle(token: string): Promise<{
         accessToken: {
-            expiresIn: any;
-            accessToken: any;
+            expiresIn: string;
+            accessToken: string;
         };
         errorMessage?: undefined;
     } | {
@@ -31,13 +31,15 @@ export declare class AuthService {
     }>;
     handleProcessLoginGoogle(email: string, options: DecodedIdToken): Promise<{
         accessToken: {
-            expiresIn: any;
-            accessToken: any;
+            expiresIn: string;
+            accessToken: string;
         };
         errorMessage?: undefined;
     } | {
         errorMessage: string;
         accessToken?: undefined;
     }>;
-    decodedIdToken(token: string): any;
+    decodedIdToken(token: string): {
+        [key: string]: any;
+    };
 }

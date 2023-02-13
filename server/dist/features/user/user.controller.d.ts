@@ -1,3 +1,3 @@
 export declare class UserController {
-    getProfile(req: any): unknown;
+    getProfile(req: any): Promise<any>;
 }

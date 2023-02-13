@@ -1,4 +1,4 @@
 export declare const Cloudinary: {
     provide: string;
-    useFactory: () => any;
+    useFactory: () => import("cloudinary").ConfigOptions;
 };

@@ -21,7 +21,6 @@
 /// <reference types="mongoose/types/utility" />
 /// <reference types="mongoose/types/validation" />
 /// <reference types="mongoose/types/virtuals" />
-/// <reference types="mongoose/types" />
 /// <reference types="mongoose/types/inferschematype" />
 import { Model } from 'mongoose';
 import { User, UserDocument } from './model/user.model';
