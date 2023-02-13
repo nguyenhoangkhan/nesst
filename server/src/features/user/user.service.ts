@@ -41,7 +41,6 @@ export class UserService {
 
   async createWithGoogle(registerData: any) {
     const { email, full_name } = registerData;
-    console.log('[createWithGoogle]', registerData);
 
     const createdUser = await this.createOne({
       email,

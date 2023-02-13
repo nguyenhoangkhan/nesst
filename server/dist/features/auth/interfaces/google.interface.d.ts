@@ -1,12 +1,9 @@
 export interface DecodedIdToken {
-    iss: string;
-    azp: string;
     aud: string;
     sub: string;
     email: string;
     email_verified: boolean;
-    full_name: string;
-    at_hash: boolean;
+    at_hash: string;
     iat: number;
     exp: number;
 }

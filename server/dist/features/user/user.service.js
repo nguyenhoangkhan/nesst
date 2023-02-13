@@ -11,6 +11,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
+var _a;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UserService = void 0;
 const common_1 = require("@nestjs/common");
@@ -44,7 +45,6 @@ let UserService = class UserService {
     }
     async createWithGoogle(registerData) {
         const { email, full_name } = registerData;
-        console.log('[createWithGoogle]', registerData);
         const createdUser = await this.createOne({
             email,
             full_name,
@@ -55,7 +55,7 @@ let UserService = class UserService {
 UserService = __decorate([
     (0, common_1.Injectable)(),
     __param(0, (0, mongoose_1.InjectModel)(user_model_1.User.name)),
-    __metadata("design:paramtypes", [mongoose_2.Model])
+    __metadata("design:paramtypes", [typeof (_a = typeof mongoose_2.Model !== "undefined" && mongoose_2.Model) === "function" ? _a : Object])
 ], UserService);
 exports.UserService = UserService;
 //# sourceMappingURL=user.service.js.map

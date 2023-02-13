@@ -1,19 +1,27 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { firebaseAdminConfig } from './share/constants/firebase.const';
+import * as serviceAccount from './share/firebase/serviceAccountKey.json';
 import * as admin from 'firebase-admin';
 
+const firebase_params = {
+  type: serviceAccount.type,
+  projectId: serviceAccount.project_id,
+  privateKeyId: serviceAccount.private_key_id,
+  privateKey: serviceAccount.private_key,
+  clientEmail: serviceAccount.client_email,
+  clientId: serviceAccount.client_id,
+  authUri: serviceAccount.auth_uri,
+  tokenUri: serviceAccount.token_uri,
+  authProviderX509CertUrl: serviceAccount.auth_provider_x509_cert_url,
+  clientC509CertUrl: serviceAccount.client_x509_cert_url,
+};
+
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, { cors: true });
 
   admin.initializeApp({
-    credential: admin.credential.cert({
-      projectId: firebaseAdminConfig.project_id,
-      privateKey: firebaseAdminConfig.private_key,
-      clientEmail: firebaseAdminConfig.client_email,
-    }),
+    credential: admin.credential.cert(firebase_params),
   });
-
   await app.listen(3000);
 }
 bootstrap();

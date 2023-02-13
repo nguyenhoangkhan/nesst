@@ -20,10 +20,24 @@ export declare class AuthService {
     private _createToken;
     private findByLogin;
     loginWithFirebaseGoogle(token: string): Promise<{
-        access_token: string;
+        accessToken: {
+            expiresIn: string;
+            accessToken: string;
+        };
+        errorMessage?: undefined;
+    } | {
+        errorMessage: string;
+        accessToken?: undefined;
     }>;
     handleProcessLoginGoogle(email: string, options: DecodedIdToken): Promise<{
-        access_token: string;
+        accessToken: {
+            expiresIn: string;
+            accessToken: string;
+        };
+        errorMessage?: undefined;
+    } | {
+        errorMessage: string;
+        accessToken?: undefined;
     }>;
     decodedIdToken(token: string): {
         [key: string]: any;

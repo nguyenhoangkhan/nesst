@@ -88,9 +88,7 @@ export class AuthService {
 
     return user;
   }
-  async loginWithFirebaseGoogle(token: string): Promise<{
-    access_token: string;
-  }> {
+  async loginWithFirebaseGoogle(token: string) {
     const decode = this.decodedIdToken(token);
     return this.handleProcessLoginGoogle(
       (decode as DecodedIdToken).email,
@@ -98,39 +96,28 @@ export class AuthService {
     );
   }
 
-  async handleProcessLoginGoogle(
-    email: string,
-    options: DecodedIdToken,
-  ): Promise<{
-    access_token: string;
-  }> {
-    const isExitsAccount = await this.userService.findOne(email);
+  async handleProcessLoginGoogle(email: string, options: DecodedIdToken) {
+    const userAccount = await this.userService.findOne(email);
 
-    if (isExitsAccount._id) {
-      const payload = {
-        username: isExitsAccount.email,
-        sub: isExitsAccount._id,
-      };
+    if (userAccount) {
       return {
-        access_token: this.jwtService.sign(payload),
+        accessToken: this._createToken(email),
       };
     }
 
-    const createUserObject = await this.userService.createWithGoogle(
+    const userCreated = await this.userService.createWithGoogle(
       options as DecodedIdToken,
     );
 
     try {
-      if (createUserObject === undefined || createUserObject === null)
-        throw new BadRequestException('Register Login Google with error');
-
-      const payload = {
-        username: createUserObject.email,
-        sub: createUserObject._id,
-      };
+      if (!userCreated) {
+        return {
+          errorMessage: 'Có lỗi khi tạo tài khoản với Google',
+        };
+      }
 
       return {
-        access_token: this.jwtService.sign(payload),
+        accessToken: this._createToken(email),
       };
     } catch (error) {
       throw error;

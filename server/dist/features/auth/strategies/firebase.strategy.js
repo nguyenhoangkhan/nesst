@@ -24,8 +24,8 @@ let FirebaseStrategy = class FirebaseStrategy extends (0, passport_1.PassportStr
     async validate(token) {
         try {
             const invalidToken = this.authService.decodedIdToken(token);
-            if (invalidToken.email_verified === false) {
-                throw new common_1.UnauthorizedException('You must verified Email');
+            if (!invalidToken) {
+                throw new common_1.UnauthorizedException('Token không hợp lệ');
             }
             return token;
         }

@@ -8,6 +8,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+var _a;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AuthService = void 0;
 const common_1 = require("@nestjs/common");
@@ -71,26 +72,21 @@ let AuthService = class AuthService {
         return this.handleProcessLoginGoogle(decode.email, decode);
     }
     async handleProcessLoginGoogle(email, options) {
-        const isExitsAccount = await this.userService.findOne(email);
-        if (isExitsAccount._id) {
-            const payload = {
-                username: isExitsAccount.email,
-                sub: isExitsAccount._id,
-            };
+        const userAccount = await this.userService.findOne(email);
+        if (userAccount) {
             return {
-                access_token: this.jwtService.sign(payload),
+                accessToken: this._createToken(email),
             };
         }
-        const createUserObject = await this.userService.createWithGoogle(options);
+        const userCreated = await this.userService.createWithGoogle(options);
         try {
-            if (createUserObject === undefined || createUserObject === null)
-                throw new exceptions_1.BadRequestException('Register Login Google with error');
-            const payload = {
-                username: createUserObject.email,
-                sub: createUserObject._id,
-            };
+            if (!userCreated) {
+                return {
+                    errorMessage: 'Có lỗi khi tạo tài khoản với Google',
+                };
+            }
             return {
-                access_token: this.jwtService.sign(payload),
+                accessToken: this._createToken(email),
             };
         }
         catch (error) {
@@ -111,8 +107,7 @@ let AuthService = class AuthService {
 };
 AuthService = __decorate([
     (0, common_1.Injectable)(),
-    __metadata("design:paramtypes", [jwt_1.JwtService,
-        user_service_1.UserService])
+    __metadata("design:paramtypes", [typeof (_a = typeof jwt_1.JwtService !== "undefined" && jwt_1.JwtService) === "function" ? _a : Object, user_service_1.UserService])
 ], AuthService);
 exports.AuthService = AuthService;
 //# sourceMappingURL=auth.service.js.map

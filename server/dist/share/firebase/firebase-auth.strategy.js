@@ -13,25 +13,30 @@ exports.FirebaseAuthStrategy = void 0;
 const passport_1 = require("@nestjs/passport");
 const common_1 = require("@nestjs/common");
 const passport_firebase_jwt_1 = require("passport-firebase-jwt");
-const firebase_admin_1 = require("firebase-admin");
+const auth_service_1 = require("../../features/auth/auth.service");
 let FirebaseAuthStrategy = class FirebaseAuthStrategy extends (0, passport_1.PassportStrategy)(passport_firebase_jwt_1.Strategy) {
-    constructor() {
+    constructor(authService) {
         super({
             jwtFromRequest: passport_firebase_jwt_1.ExtractJwt.fromAuthHeaderAsBearerToken(),
         });
+        this.authService = authService;
     }
-    validate(token) {
-        return (0, firebase_admin_1.auth)()
-            .verifyIdToken(token, true)
-            .catch((err) => {
-            console.log(err);
-            throw new common_1.UnauthorizedException();
-        });
+    async validate(token) {
+        try {
+            const invalidToken = this.authService.decodedIdToken(token);
+            if (invalidToken.email_verified === false) {
+                throw new common_1.UnauthorizedException('You must verified Email');
+            }
+            return token;
+        }
+        catch (error) {
+            throw error;
+        }
     }
 };
 FirebaseAuthStrategy = __decorate([
     (0, common_1.Injectable)(),
-    __metadata("design:paramtypes", [])
+    __metadata("design:paramtypes", [auth_service_1.AuthService])
 ], FirebaseAuthStrategy);
 exports.FirebaseAuthStrategy = FirebaseAuthStrategy;
 //# sourceMappingURL=firebase-auth.strategy.js.map
