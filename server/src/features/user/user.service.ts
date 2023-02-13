@@ -10,8 +10,8 @@ export class UserService {
     private userModel: Model<UserDocument>,
   ) {}
 
-  async findOne(email: string) {
-    const user = await this.userModel.findOne({ email });
+  async findOne(field: string) {
+    const user = await this.userModel.findOne({ field });
 
     return user;
   }
@@ -33,5 +33,20 @@ export class UserService {
 
   async findById(id: string) {
     return await this.userModel.findById(id);
+  }
+
+  async findOneByEmail(email: string) {
+    return await this.userModel.findOne({ email });
+  }
+
+  async createWithGoogle(registerData: any) {
+    const { email, full_name } = registerData;
+    console.log('[createWithGoogle]', registerData);
+
+    const createdUser = await this.createOne({
+      email,
+      full_name,
+    });
+    return createdUser;
   }
 }

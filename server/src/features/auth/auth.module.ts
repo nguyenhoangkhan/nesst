@@ -7,6 +7,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { JwtStrategy } from './strategies/jwt.strategy';
+import { FirebaseAuthStrategy } from 'src/share/firebase/firebase-auth.strategy';
 
 function jwtModuleFactory(configService: ConfigService) {
   return {
@@ -18,6 +19,7 @@ function jwtModuleFactory(configService: ConfigService) {
   imports: [
     UserModule,
     PassportModule,
+    PassportModule.register({ defaultStrategy: 'firebase-jwt' }),
     JwtModule.registerAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
@@ -29,7 +31,7 @@ function jwtModuleFactory(configService: ConfigService) {
     }),
   ],
   controllers: [AuthController],
-  providers: [AuthService, LocalStrategy, JwtStrategy],
+  providers: [AuthService, LocalStrategy, JwtStrategy, FirebaseAuthStrategy],
   exports: [AuthService],
 })
 export class AuthModule {}
